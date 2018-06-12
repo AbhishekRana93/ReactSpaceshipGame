@@ -6,18 +6,36 @@ import CannonPipe from './CannonPipe';
 import CannonBall from './CannonBall';
 import CurrentScore from './CurrentScore';
 import FlyingObject from './FlyingObject';
+import Heart from './Heart';
+import StartGame from './StartGame';
+import Title from './Title';
+
 
 
 export default function Canvas(props) {
-	const viewBox = [window.innerWidth/-2, 100 - window.innerHeight, window.innerWidth, window.innerHeight];
+	const gameHeight = 1200;
+	const viewBox = [window.innerWidth/-2, 100 - gameHeight, window.innerWidth, gameHeight];	
 	
-	const cannonBallPosition = {
-		x : 0,
-		y : -100,
+
+	const flyingObjectList = props.gameState.flyingObjects.map(flyingObject => (
+		<FlyingObject key={flyingObject.id} position={flyingObject.position}/>
+	));
+
+  	// console.log(JSON.stringify(props.gameState.cannonBalls) + "Canvas");
+
+	const ballList = props.gameState.cannonBalls.map(ball => (
+		<CannonBall key={ball.id} position={ball.position} />
+	));
+
+	const lives = [];
+	for(let i = 0; i < props.gameState.lives; i++) {
+		lives.push(
+			<Heart key = {i} position = {{x : -800 - i*80, y : 65}} />
+		)
 	}
 
 	return (
-		<svg id="game_canvas"  viewBox={viewBox} preserveAspectRatio="xMidYMid meet" onMouseMove={props.trackMouse}>
+		<svg id="game_canvas"  viewBox={viewBox} preserveAspectRatio="xMidYMid meet" onMouseMove={props.trackMouse} onClick = {props.shoot}>
 			
 			<defs>
 				<filter id="shadow">
@@ -25,16 +43,39 @@ export default function Canvas(props) {
 				</filter>
 			</defs>
 			
-			<Sky/>
-			<Ground/>
-			<CannonPipe rotation = {props.angle}/>
-			<CannonBase/>
-			<CannonBall position = {cannonBallPosition}/>
-			<CurrentScore score={props.score}/>
-			<FlyingObject position = {{x : -400, y : -800}}/>
-			<FlyingObject position = {{x : 400, y : -800}}/>
+			<Sky />
+			<Ground />
+			{
+				props.gameState.started && ballList
+			}
+
+			<CannonPipe rotation = {props.angle} />
+			<CannonBase />
+			<CurrentScore kills={props.gameState.kills} />
+
+			{
+				!props.gameState.started && (
+					<g>
+						<StartGame onClick = {props.handleStart}/>
+						<Title/>
+					</g>
+				)
+			}
+
+			{
+				props.gameState.started && flyingObjectList
+			}
+			{
+				props.gameState.started && lives
+			}
 
 		</svg>
-		);
+	);
 	
 }
+
+/*
+	<CannonBall cannonBalls = {props.cannonState}/>
+	
+	<Heart position = {{x : -600, y : 65}} />
+*/

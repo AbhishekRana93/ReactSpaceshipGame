@@ -1,7 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-
-function CannonBall(props) {
+export default function CannonBall(props) {
 
 	const cannonBallStyle = {
     	fill: '#777',
@@ -10,9 +9,6 @@ function CannonBall(props) {
   	};
 
 	return (
-		<circle cx = {props.position.x} cy = {props.position.y} r="25" style = {cannonBallStyle}/>
-	)
+		<circle cx = {props.position.x} cy = {props.position.y} r="16" style = {cannonBallStyle}/>
+	);
 }
-
-
-export default CannonBall

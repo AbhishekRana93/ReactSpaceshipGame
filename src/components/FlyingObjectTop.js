@@ -1,5 +1,5 @@
 import React from 'react';
-import {pathFromBezierCurve} from '../utils/formulas';
+import {pathFromQuadraticBezierCurve} from '../utils/formulas';
 
 export default function FlyingObjectTop(props) {
 	
@@ -26,7 +26,7 @@ export default function FlyingObjectTop(props) {
   		}
   	}
 
-  	const curve = pathFromBezierCurve(coord);
+  	const curve = pathFromQuadraticBezierCurve(coord);
 
 	return (
 		<g>

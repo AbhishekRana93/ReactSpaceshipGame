@@ -6,10 +6,11 @@ import {getPositionOnSvg} from './utils/formulas';
 
 class App extends Component {
 
-	// constructor(props) {
-	// 	super(props);
-	// 	this.trackMouse = this.trackMouse.bind(this);
-	// }
+	constructor(props) {
+		super(props);
+		this.shoot = this.shoot.bind(this);
+
+	}
 
 	componentDidMount() {
 		const self = this;
@@ -17,6 +18,14 @@ class App extends Component {
 		this.intervalId = setInterval(() => {
 			self.props.moveObjectsDispatcher(self.mousePosition);
 		}, 10)
+
+		window.onresize = function() {
+			const cnvs = document.getElementById("game_canvas");
+			cnvs.style.width = `${window.innerWidth}px`;
+			cnvs.style.height = `${window.innerHeight}px`;
+		}
+
+		window.onresize();
 	}
 
 	componentWillUnmount() {
@@ -27,6 +36,11 @@ class App extends Component {
 		this.mousePosition = getPositionOnSvg(e);
 	}
 
+	shoot(e) {
+		this.clickPosition = getPositionOnSvg(e);
+		this.props.shootDispatcher(this.clickPosition);
+	}
+
 
 	render() {
 		return (
@@ -34,7 +48,9 @@ class App extends Component {
 				<Canvas 
 					angle = {this.props.angle}
 					trackMouse = {event => this.trackMouse(event)}
-					score = {this.props.score}
+					gameState = {this.props.gameState}
+					handleStart = {e => this.props.startGameDispatcher()}
+					shoot = {this.shoot}
 				/>
 			</div>
 		);

@@ -14,9 +14,9 @@ function CurrentScore(props) {
 	}
 
 	return (
-	<g filter="url(#shadow)">
+	<g filter="url(#shadow)">a
 		<text x = {scorePosition.x} y = {scorePosition.y} style = {scoreStyle}>
-			{props.score}
+			{props.kills}
 		</text>
 	</g>
 	);

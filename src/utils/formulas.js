@@ -1,27 +1,17 @@
-// export const pathFromBezierCurve = (cubicBezierCurve) => {
-//   const {
-//     initialAxis, initialControlPoint, endingControlPoint, endingAxis,
-//   } = cubicBezierCurve;
-//   return `
-//     M${initialAxis.x} ${initialAxis.y}
-//     c ${initialControlPoint.x} ${initialControlPoint.y}
-//     ${endingControlPoint.x} ${endingControlPoint.y}
-//     ${endingAxis.x} ${endingAxis.y}
-//   `;
-// };
 
+export const calculateAngle = (x1, y1, x2, y2) => {
+  if (x2 >= 0 && y2 >= 0) {
+    return 90;
+  } else if (x2 < 0 && y2 >= 0) {
+    return -90;
+  }
 
-export function calculateAngle(x1, y1, x2, y2) {
-	if(x1 >=0 && y1>=0 ) return 90;
-	else if(x1 < 0 && y1 >=0 ) return -90;
-	else {
-		const num = y2 - y1;
-		const denom = x2 - x1;
-		var result = Math.atan(denom/num)*-1*180/Math.PI;
-		return result;
-	}
+  const dividend = x2 - x1;
+  const divisor = y2 - y1;
+  const quotient = dividend / divisor;
+  return radiansToDegrees(Math.atan(quotient)) * -1;
+};
 
-}
 
 export function getPositionOnSvg(event) {
   // mouse position on auto-scaling canvas. Reference :
@@ -37,6 +27,44 @@ export function getPositionOnSvg(event) {
 };
 
 
-export function pathFromBezierCurve(coord) {
+export function pathFromQuadraticBezierCurve(coord) {
 	return `M ${coord.initial.x} ${coord.initial.y} Q ${coord.control.x} ${coord.control.y} , ${coord.end.x} ${coord.end.y}`;
 }
+
+
+export function pathFromCubicBezierCurve(coord) {
+	return `M ${coord.initial.x} ${coord.initial.y} C ${coord.control1.x} ${coord.control1.y}, ${coord.control2.x} ${coord.control2.y} , ${coord.end.x} ${coord.end.y}`;
+}
+
+
+export const degreesToRadian = degrees => ((degrees * Math.PI) / 180);
+
+export function getNextPosition(x, y, angle, divisor = 100) {
+	
+	const realAngle = 90 - angle;
+
+	return {
+		x : x + Math.sin(angle)/divisor,
+		y : y - Math.cos(angle)/divisor,
+	}
+
+}
+
+
+export const radiansToDegrees = radians => ((radians * 180) / Math.PI);
+
+export const calculateNextPosition = (x, y, angle, divisor = 300) => {
+	const realAngle = (angle * -1) + 90;
+	const stepsX = radiansToDegrees(Math.cos(degreesToRadian(realAngle))) / divisor;
+	const stepsY = radiansToDegrees(Math.sin(degreesToRadian(realAngle))) / divisor;
+	return {
+		x: x +stepsX,
+		y: y - stepsY,
+	}
+};
+
+
+export const checkCollision = (rectA, rectB) => (
+  rectA.x1 < rectB.x2 && rectA.x2 > rectB.x1 &&
+  rectA.y1 < rectB.y2 && rectA.y2 > rectB.y1
+);
