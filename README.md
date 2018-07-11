@@ -5,5 +5,5 @@ Instructions to run :
 2) run `npm start` inside the repo to start local server
 3) Play
 
-Screenshots
-![Gameplay](/public/img.jpg?raw=true "Shoot Spaceships")
+Screenshot : 
+![Game Screen](/public/img.jpg?raw=true "Shoot Spaceships")
